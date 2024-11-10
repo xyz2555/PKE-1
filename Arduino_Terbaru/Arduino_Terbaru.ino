@@ -1,8 +1,8 @@
 int proxy = 2;
-int capacitive = 5;
-int inductive = 8;
+int capacitive = 3;
+int inductive = 5;
 
-//int servo_p = 3;
+//int servo_buka = 5;
 //int servo_i = 6; 
 //int servo_c = 9;
 
