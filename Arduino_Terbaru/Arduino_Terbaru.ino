@@ -16,93 +16,98 @@ float distance = 0.00;
 
 //unsigned long startTime;
 //boolean timerStarted = false;
-//const unsigned long DETECTION_PERIOD = 5000; 
+//const unsigned long DETECTION_PERIOD = 5000;
 boolean objectDetected = false;
 
 const unsigned long interval = 50;
 const unsigned long total_checks = 100;
+const unsigned long total_checks2 = 60;
+
 
 int cek;
 
-void setup(){
-pinMode(proxy, INPUT);
-pinMode(inductive, INPUT);
-pinMode(capacitive, INPUT);
+void setup() {
+  pinMode(proxy, INPUT);
+  pinMode(inductive, INPUT);
+  pinMode(capacitive, INPUT);
 
-pinMode(trig_pin, OUTPUT);
-pinMode(echo_pin, INPUT);
+  pinMode(trig_pin, OUTPUT);
+  pinMode(echo_pin, INPUT);
 
-digitalWrite(trig_pin, LOW);
-servo_buka.attach(5);
-servo_inductive.attach(6);
-servo_capacitive.attach(9);
+  digitalWrite(trig_pin, LOW);
+  servo_buka.attach(5);
+  servo_inductive.attach(6);
+  servo_capacitive.attach(9);
 
-Serial.begin(9600);
+  Serial.begin(9600);
 
-servo_buka.write(0);
+  servo_buka.write(0);
 
 }
 
-void loop(){
+void loop() {
   servo_inductive.write(90);
   servo_capacitive.write(90);
   Deteksi();
-  if(cek == 1){
+  if (cek == 1) {
     Sortir();
   }
   delay(1000);
 }
 
-void Deteksi(){
-digitalWrite(trig_pin, LOW);
-delay(20);
-digitalWrite(trig_pin, HIGH);
-delay(40);
-digitalWrite(trig_pin, LOW);
+void Deteksi() {
+  digitalWrite(trig_pin, LOW);
+  delay(20);
+  digitalWrite(trig_pin, HIGH);
+  delay(40);
+  digitalWrite(trig_pin, LOW);
 
-timing = pulseIn(echo_pin, HIGH);
-distance = (timing * 0.034) / 2;  
-Serial.print("Distance: ");
-Serial.print(distance);
-Serial.println("cm");
+  timing = pulseIn(echo_pin, HIGH);
+  distance = (timing * 0.034) / 2;
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println("cm");
 
-if (distance <= 20) {
-servo_buka.write(90);
-cek = 1;
-} else {
-servo_buka.write(0);
-cek = 0;
-}
-  
-delay(1000);
-}
-
-void Sortir(){
-  objectDetected = false;
-
-  for(int i = 0 ; i <= total_checks ; i++){
-   if(digitalRead(inductive) == 0){
-    Serial.println(String(1));
-    servo_inductive.write(0);
-    objectDetected = true;
-    break;
-  }
-   else if (i == total_checks){
-    servo_inductive.write(180);
-    break;
-   }
-  delay(interval);  
-  }
-  
-  if(digitalRead(capacitive) == 1){
-    Serial.println(String(2));
+  if (distance <= 20) {
+    servo_buka.write(90);
+    cek = 1;
+  } else {
+    servo_buka.write(0);
+    cek = 0;
   }
 
-  else if(digitalRead(proxy) == 0){
-    Serial.println(String(3));
-  }
   delay(1000);
-
-
 }
-  
+
+void Sortir() {
+  for (int k = 1 ; k <= 3 ; k++) {
+    if (k == 1) {
+      for (int i = 0 ; i <= total_checks ; i++) {
+        if (digitalRead(inductive) == 0) {
+          Serial.println(String(1));
+          servo_inductive.write(0);
+          delay(1000);
+          return;
+        }
+        else if (i == total_checks) {
+          servo_inductive.write(180);
+        }
+        delay(interval);
+      }
+    }
+    else if (k == 2) {
+      for (int j = 0 ; j <= total_checks2 ; j++) {
+        if (digitalRead(capacitive) == 1) {
+          Serial.println(String(2));
+          servo_capacitive.write(0);
+          delay(1000);
+          return;
+        }
+        else if (j ==  total_checks2) {
+          servo_capacitive.write(180);
+        }
+        delay(interval);
+      }
+    }
+  }
+}
