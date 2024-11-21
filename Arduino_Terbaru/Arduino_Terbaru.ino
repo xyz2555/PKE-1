@@ -17,12 +17,11 @@ float distance = 0.00;
 //unsigned long startTime;
 //boolean timerStarted = false;
 //const unsigned long DETECTION_PERIOD = 5000;
-boolean objectDetected = false;
+//boolean objectDetected = false;
 
 const unsigned long interval = 50;
 const unsigned long total_checks = 100;
-const unsigned long total_checks2 = 60;
-
+const unsigned long total_checks2 = 40;
 
 int cek;
 
@@ -50,11 +49,40 @@ void loop() {
   servo_capacitive.write(90);
   Deteksi();
   if (cek == 1) {
-    Sortir();
-  }
-  delay(1000);
-}
+    for (int i = 0 ; i <= total_checks ; i++) {
+      if (digitalRead(inductive) == 0) {
+        Serial.println(String(1));
+        servo_inductive.write(0);
+        delay(1000);
+        break;
+      }
+      else if (i == total_checks) {
+        servo_inductive.write(180);
+        delay(1000);
+        //      Sortir2();
+      }
+      delay(interval);
+    }
 
+    for (int j = 0 ; j <= total_checks2 ; j++) {
+      if (digitalRead(capacitive) == 1) {
+        Serial.println(String(2));
+        servo_capacitive.write(180);
+        delay(1000);
+        break;
+      }
+      else if (j ==  total_checks2) {
+        servo_capacitive.write(0);
+        delay(1000);
+      }
+      delay(interval);
+    }
+  }
+  else{
+    cek = 0;
+    return;
+  }
+}
 void Deteksi() {
   digitalWrite(trig_pin, LOW);
   delay(20);
@@ -77,37 +105,4 @@ void Deteksi() {
   }
 
   delay(1000);
-}
-
-void Sortir() {
-  for (int k = 1 ; k <= 3 ; k++) {
-    if (k == 1) {
-      for (int i = 0 ; i <= total_checks ; i++) {
-        if (digitalRead(inductive) == 0) {
-          Serial.println(String(1));
-          servo_inductive.write(0);
-          delay(1000);
-          return;
-        }
-        else if (i == total_checks) {
-          servo_inductive.write(180);
-        }
-        delay(interval);
-      }
-    }
-    else if (k == 2) {
-      for (int j = 0 ; j <= total_checks2 ; j++) {
-        if (digitalRead(capacitive) == 1) {
-          Serial.println(String(2));
-          servo_capacitive.write(0);
-          delay(1000);
-          return;
-        }
-        else if (j ==  total_checks2) {
-          servo_capacitive.write(180);
-        }
-        delay(interval);
-      }
-    }
-  }
 }
