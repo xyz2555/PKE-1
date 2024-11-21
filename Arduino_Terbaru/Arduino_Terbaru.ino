@@ -1,8 +1,12 @@
 #include <Servo.h>
+#include <LiquidCrystal_I2C.h>
+#include <Wire.h>
 
 Servo servo_buka;
 Servo servo_inductive;
 Servo servo_capacitive;
+
+LiquidCrystal_I2C Display(0x27 , 16 , 2);
 
 const int trig_pin = 12;
 const int echo_pin = 13;
@@ -38,6 +42,9 @@ void setup() {
   servo_inductive.attach(6);
   servo_capacitive.attach(9);
 
+  Display.init();
+  Display.backlight();
+
   Serial.begin(9600);
 
   servo_buka.write(0);
@@ -47,19 +54,32 @@ void setup() {
 void loop() {
   servo_inductive.write(90);
   servo_capacitive.write(90);
+  Display.setCursor(0, 0);
+  Display.print("S P E N C E R>/<");
+  Display.setCursor(0, 1);
+  Display.print("Kelompok 5");
   Deteksi();
   if (cek == 1) {
+    Display.clear();
+    Display.setCursor(1, 0);
+    Display.print("Selamat Datang");
+    Display.setCursor(1, 1);
+    Display.print("Siapkan Sampah");
     for (int i = 0 ; i <= total_checks ; i++) {
       if (digitalRead(inductive) == 0) {
         Serial.println(String(1));
         servo_inductive.write(0);
-        delay(1000);
+        Display.clear();
+        Display.setCursor(0, 0);
+        Display.print("Sampah Anda>>>>>");
+        Display.setCursor(0, 1);
+        Display.print("Logam");
+        delay(3000);
         break;
       }
       else if (i == total_checks) {
         servo_inductive.write(180);
         delay(1000);
-        //      Sortir2();
       }
       delay(interval);
     }
@@ -68,17 +88,27 @@ void loop() {
       if (digitalRead(capacitive) == 1) {
         Serial.println(String(2));
         servo_capacitive.write(180);
-        delay(1000);
+        Display.clear();
+        Display.setCursor(0, 0);
+        Display.print("Sampah Anda>>>>>");
+        Display.setCursor(0, 1);
+        Display.print("Organik");
+        delay(3000);
         break;
       }
       else if (j ==  total_checks2) {
         servo_capacitive.write(0);
-        delay(1000);
+        Display.clear();
+        Display.setCursor(0, 0);
+        Display.print("Sampah Anda>>>>>");
+        Display.setCursor(0, 1);
+        Display.print("Anorganik");
+        delay(3000);
       }
       delay(interval);
     }
   }
-  else{
+  else {
     cek = 0;
     return;
   }
