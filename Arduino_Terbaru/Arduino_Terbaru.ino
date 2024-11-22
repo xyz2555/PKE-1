@@ -75,7 +75,7 @@ void loop() {
         Display.setCursor(0, 1);
         Display.print("Logam");
         delay(3000);
-        break;
+        return;
       }
       else if (i == total_checks) {
         servo_inductive.write(180);
@@ -92,17 +92,18 @@ void loop() {
         Display.setCursor(0, 0);
         Display.print("Sampah Anda>>>>>");
         Display.setCursor(0, 1);
-        Display.print("Organik");
+        Display.print("Anorganik");
         delay(3000);
-        break;
+        return;
       }
       else if (j ==  total_checks2) {
+        Serial.println(String(3));
         servo_capacitive.write(0);
         Display.clear();
         Display.setCursor(0, 0);
         Display.print("Sampah Anda>>>>>");
         Display.setCursor(0, 1);
-        Display.print("Anorganik");
+        Display.print("Organik");
         delay(3000);
       }
       delay(interval);
