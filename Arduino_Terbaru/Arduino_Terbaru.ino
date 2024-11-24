@@ -68,17 +68,17 @@ void loop() {
     for (int i = 0 ; i <= total_checks ; i++) {
       if (digitalRead(inductive) == 0) {
         Serial.println(String(1));
-        servo_inductive.write(0);
+        servo_inductive.write(180);
         Display.clear();
         Display.setCursor(0, 0);
         Display.print("Sampah Anda>>>>>");
         Display.setCursor(0, 1);
         Display.print("Logam");
         delay(3000);
-        return;
+        return; 
       }
       else if (i == total_checks) {
-        servo_inductive.write(180);
+        servo_inductive.write(0);
         delay(1000);
       }
       delay(interval);
