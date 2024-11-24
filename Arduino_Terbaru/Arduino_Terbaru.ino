@@ -47,7 +47,7 @@ void setup() {
 
   Serial.begin(9600);
 
-  servo_buka.write(0);
+  servo_buka.write(180);
 
 }
 
@@ -68,6 +68,8 @@ void loop() {
     for (int i = 0 ; i <= total_checks ; i++) {
       if (digitalRead(inductive) == 0) {
         Serial.println(String(1));
+        servo_buka.write(180);
+        delay(500);
         servo_inductive.write(180);
         Display.clear();
         Display.setCursor(0, 0);
@@ -78,6 +80,9 @@ void loop() {
         return; 
       }
       else if (i == total_checks) {
+        servo_buka.write(180);
+        servo_capacitive.write(135);
+        delay(500);
         servo_inductive.write(0);
         delay(1000);
       }
@@ -87,7 +92,7 @@ void loop() {
     for (int j = 0 ; j <= total_checks2 ; j++) {
       if (digitalRead(capacitive) == 1) {
         Serial.println(String(2));
-        servo_capacitive.write(180);
+        servo_capacitive.write(155);
         Display.clear();
         Display.setCursor(0, 0);
         Display.print("Sampah Anda>>>>>");
@@ -131,7 +136,7 @@ void Deteksi() {
     servo_buka.write(90);
     cek = 1;
   } else {
-    servo_buka.write(0);
+    servo_buka.write(180);
     cek = 0;
   }
 
