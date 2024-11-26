@@ -25,7 +25,7 @@ float distance = 0.00;
 
 const unsigned long interval = 50;
 const unsigned long total_checks = 100;
-const unsigned long total_checks2 = 40;
+const unsigned long total_checks2 = 60;
 
 int cek;
 
@@ -47,7 +47,7 @@ void setup() {
 
   Serial.begin(9600);
 
-  servo_buka.write(180);
+  servo_buka.write(175);
 
 }
 
@@ -68,8 +68,8 @@ void loop() {
     for (int i = 0 ; i <= total_checks ; i++) {
       if (digitalRead(inductive) == 0) {
         Serial.println(String(1));
-        servo_buka.write(180);
-        delay(500);
+        servo_buka.write(110);
+        delay(750);
         servo_inductive.write(180);
         Display.clear();
         Display.setCursor(0, 0);
@@ -77,13 +77,16 @@ void loop() {
         Display.setCursor(0, 1);
         Display.print("Logam");
         delay(3000);
+        servo_buka.write(180);
         return; 
       }
       else if (i == total_checks) {
         servo_buka.write(180);
-        servo_capacitive.write(135);
+        servo_capacitive.write(115);
         delay(500);
         servo_inductive.write(0);
+        delay(500);
+        servo_capacitive.write(90);
         delay(1000);
       }
       delay(interval);
@@ -92,7 +95,7 @@ void loop() {
     for (int j = 0 ; j <= total_checks2 ; j++) {
       if (digitalRead(capacitive) == 1) {
         Serial.println(String(2));
-        servo_capacitive.write(155);
+        servo_capacitive.write(165);
         Display.clear();
         Display.setCursor(0, 0);
         Display.print("Sampah Anda>>>>>");
@@ -136,7 +139,7 @@ void Deteksi() {
     servo_buka.write(90);
     cek = 1;
   } else {
-    servo_buka.write(180);
+    servo_buka.write(175);
     cek = 0;
   }
 
